@@ -71,9 +71,7 @@ with open(file_name, "w") as file:
     file.write(response)
     print(f"HTML file saved as {file_name}")
 
-# Open the HTML file in the default web browser
-webbrowser_open_successful = webbrowser.open(file_name)
-if webbrowser_open_successful:
+if webbrowser_open_successful := webbrowser.open(file_name):
     print("HTML file opened successfully in the default web browser.")
 else:
     print("Failed to open the HTML file in the default web browser.")

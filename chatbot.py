@@ -64,13 +64,12 @@ def is_valid_html_css_code(output):
 
 # Function to generate a response using OpenAI's ChatCompletion API
 def generate_response(prompt, html_content):
-    completion = chatgpt_chain.predict(
+    return chatgpt_chain.predict(
         human_input=(
             "You are a senior developer. I want you to improve the following code with the following {prompt}: {html_content}. Only output new html/css code. Do not write additional text."
             "The code is html/css that was created by AI based on a Figma document."
         ).format(prompt=prompt, html_content=html_content)
     )
-    return completion
 
 # Function to render the HTML content using Streamlit's markdown function
 def render_html(html_content):
@@ -78,9 +77,7 @@ def render_html(html_content):
 
 # Function to get the user's input from the text input field
 def get_text():
-    # Create a Streamlit input field and return the user's input
-    input_text = st.text_input("", key="input")
-    return input_text
+    return st.text_input("", key="input")
 
 # Initialize the session state for generated responses and past inputs
 if 'generated' not in st.session_state:
@@ -96,11 +93,7 @@ if 'current_html_content' not in st.session_state:
 # Render the initial HTML content
 display = render_html(read_html_content(file_name))
 
-# Get the user's input from the text input field
-user_input = get_text()
-
-# If there is user input, search for a response and update the HTML content
-if user_input:
+if user_input := get_text():
     html_content = read_html_content(file_name)
     output = generate_response(user_input, st.session_state['current_html_content'])
     if is_valid_html_css_code(output):
@@ -119,8 +112,7 @@ if user_input:
 # If there are generated responses, display the conversation using Streamlit messages
 if st.session_state['generated']:
     for i in range(len(st.session_state['generated'])):
-        message(st.session_state['past'][i],
-                is_user=True, key=str(i) + '_user')
+        message(st.session_state['past'][i], is_user=True, key=f'{str(i)}_user')
         message(st.session_state["generated"][i], key=str(i))
 
 
